@@ -14,9 +14,11 @@ main{padding-bottom:45px}.panel{background:var(--paper);border:1px solid var(--l
 h2{font-size:21px;margin:0 0 8px;color:var(--navy)}h3{font-size:17px;margin:0 0 8px}.muted{color:var(--muted)}.small{font-size:13px;color:var(--muted)}
 .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.stat{border:1px solid var(--line);padding:12px;border-radius:5px;background:#fafbfd}.stat strong{display:block;font-size:22px;color:var(--navy)}
 button{font:inherit}.primary,.secondary,.danger{border:0;border-radius:4px;padding:11px 16px;font-weight:700;cursor:pointer}.primary{background:var(--blue);color:white}.secondary{background:#e8edf5;color:var(--navy);border:1px solid #cbd5e1}.danger{background:#f8e9ea;color:var(--red)}button:disabled{opacity:.45;cursor:not-allowed}
-select,input[type=text]{padding:10px;border:1px solid #bfc9d7;border-radius:4px;font:inherit;background:white;max-width:100%}
-.question{font-size:20px;font-weight:700;margin:15px 0}.options{display:grid;gap:9px}.option{border:1px solid var(--line);border-radius:5px;padding:12px;text-align:left;background:#fff;cursor:pointer}.option:hover{border-color:var(--blue);background:#f7faff}.option.selected{border:2px solid var(--blue);background:var(--pale)}.option.correct{border-color:var(--green);background:#eaf6ef}.option.wrong{border-color:var(--red);background:#fff0f0}
-.feedback{padding:12px;border-radius:4px;margin-top:12px;background:#f0f3f7}.feedback.good{background:#eaf6ef;color:var(--green)}.feedback.bad{background:#fff0f0;color:var(--red)}
+select,input[type=text]{padding:10px;border:1px solid #bfc9d7;border-radius:4px;font:inherit;background:#fff;color:#182230;max-width:100%;-webkit-text-fill-color:#182230}
+select option{background:#fff;color:#182230;-webkit-text-fill-color:#182230}
+select:focus,input[type=text]:focus{outline:2px solid #6b9fe3;outline-offset:1px}
+.question{font-size:20px;font-weight:700;margin:15px 0}.options{display:grid;gap:9px}.option{border:1px solid var(--line);border-radius:5px;padding:12px;text-align:left;background:#fff;color:#182230;cursor:pointer;font-weight:600}.option:hover{border-color:var(--blue);background:#f7faff;color:#172b4d}.option.selected{border:2px solid var(--blue);background:var(--pale)}.option.correct{border-color:var(--green);background:#eaf6ef}.option.wrong{border-color:var(--red);background:#fff0f0}
+.feedback{padding:12px;border-radius:4px;margin-top:12px;background:#f0f3f7;color:#182230;white-space:pre-line}.feedback.good{background:#eaf6ef;color:var(--green)}.feedback.bad{background:#fff0f0;color:var(--red)}
 .progress{height:8px;background:#e5e9ef;border-radius:8px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;background:#315f9f;width:0}
 .wordgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px}.word{padding:10px;border:1px solid var(--line);border-radius:4px;background:#fff}.word b{display:block}.word span{font-size:12px;color:var(--muted)}
 .hidden{display:none!important}.rule{padding:10px 12px;border-left:3px solid #b99b61;background:#faf8f2;margin:7px 0}.footer{font-size:12px;color:var(--muted);text-align:center;padding:20px}
@@ -29,6 +31,11 @@ select,input[type=text]{padding:10px;border:1px solid #bfc9d7;border-radius:4px;
 body[data-theme="dark"]{--ink:#e7edf5;--muted:#aab6c5;--line:#3a4758;--paper:#202b3a;--bg:#111a26;--navy:#d7e4f5;--blue:#477dc4;--pale:#263b56;--green:#7bd5a3;--red:#ff9b9b}
 body[data-theme="dark"] header{background:#0b1420}
 body[data-theme="dark"] .tab,body[data-theme="dark"] .option,body[data-theme="dark"] .word,body[data-theme="dark"] select,body[data-theme="dark"] input[type=text]{background:#202b3a;color:var(--ink);border-color:var(--line)}
+body[data-theme="dark"] .option:hover{background:#293b52;color:#f3f6fb}
+body[data-theme="dark"] .option.correct{background:#193d31;color:#b7f0ce}
+body[data-theme="dark"] .option.wrong{background:#48272d;color:#ffd0d0}
+body[data-theme="dark"] select,body[data-theme="dark"] input[type=text]{background:#202b3a;color:#e7edf5;-webkit-text-fill-color:#e7edf5}
+body[data-theme="dark"] select option{background:#202b3a;color:#e7edf5;-webkit-text-fill-color:#e7edf5}
 body[data-theme="dark"] .tab.active{background:var(--blue);color:white}
 body[data-theme="dark"] .stat{background:#182332;border-color:var(--line)}
 body[data-theme="dark"] .secondary{background:#344256;color:#edf3fb;border-color:#526176}
@@ -64,17 +71,19 @@ body[data-theme="dark"] .english,body[data-theme="dark"] .english-list p,body[da
 <button class="tab" data-view="grammar">문법 연습 <span class="en-heading">/ Grammar</span></button>
 <button class="tab" data-view="mock">종합 모의고사 <span class="en-heading">/ Mock exam</span></button>
 <button class="tab" data-view="list">어휘 목록 <span class="en-heading">/ Word list</span></button>
+<a class="tab" href="topik_i_training.html">TOPIK I 연습 <span class="en-heading">/ TOPIK I Training ↗</span></a>
 </nav>
 <section id="home" class="view">
 <div class="panel"><h2>시험 준비 <span class="en-heading">| Exam preparation</span></h2><p>이번 학기에 배운 어휘와 문법을 복습하세요. 문제와 안내는 한국어로 제공됩니다.</p><p class="english">Review the vocabulary and grammar you studied this semester. All questions and test instructions are in Korean.</p>
 <div class="row"><div class="stat"><strong id="savedAttempts">0</strong><span class="small">완료한 연습</span><div class="english">Completed attempts</div></div><div class="stat"><strong id="bestScore">—</strong><span class="small">최고 점수</span><div class="english">Best score</div></div><div class="stat"><strong id="vocabCount">0</strong><span class="small">어휘 항목</span><div class="english">Vocabulary items</div></div></div></div>
 <div class="panel"><h2>시험 선택 <span class="en-heading">| Choose a practice section</span></h2><div class="row">
-<div class="stat"><h3>어휘 연습</h3><p class="english">Vocabulary practice</p><p class="small">한국어 단어의 뜻을 고르세요.</p><p class="english">Choose the correct English meaning for each Korean word.</p><button class="primary" onclick="start('vocab')">어휘 시험 시작</button></div>
-<div class="stat"><h3>문법 연습</h3><p class="english">Grammar practice</p><p class="small">문맥에 맞는 문법을 고르세요.</p><p class="english">Choose the grammar form that best completes each sentence.</p><button class="primary" onclick="start('grammar')">문법 시험 시작</button></div>
-<div class="stat"><h3>종합 모의고사</h3><p class="small">어휘와 문법을 함께 복습하세요.</p><button class="primary" onclick="start('mock')">모의고사 시작</button></div>
+<div class="stat"><h3>어휘 연습</h3><p class="english">Vocabulary practice</p><p class="small">한국어 단어의 뜻을 고르세요.</p><p class="english">Choose the correct English meaning for each Korean word.</p><button class="primary" onclick="start('vocab')">어휘 시험 시작 <span class="en-heading" style="color:#fff">| Start vocabulary test</span></button></div>
+<div class="stat"><h3>문법 연습</h3><p class="english">Grammar practice</p><p class="small">문맥에 맞는 문법을 고르세요.</p><p class="english">Choose the grammar form that best completes each sentence.</p><button class="primary" onclick="start('grammar')">문법 시험 시작 <span class="en-heading" style="color:#fff">| Start grammar test</span></button></div>
+<div class="stat"><h3>종합 모의고사</h3><p class="english">Full mock exam</p><p class="small">어휘와 문법을 함께 복습하세요.</p><p class="english">Review vocabulary and grammar together.</p><button class="primary" onclick="start('mock')">모의고사 시작 <span class="en-heading" style="color:#fff">| Start mock exam</span></button></div>
 </div></div>
 <div class="panel"><h2>시험 방법 <span class="en-heading">| How to use this practice site</span></h2><ul><li>문제를 읽고 알맞은 답을 하나 고르세요. <span class="en-heading">— Read each question and choose one answer.</span></li><li>정답을 확인하면 간단한 설명을 볼 수 있습니다. <span class="en-heading">— Check your answer and read the explanation.</span></li><li>마지막에 점수와 틀린 문제를 확인할 수 있습니다. <span class="en-heading">— Review your score and mistakes at the end.</span></li><li>진행 상황과 최고 점수는 이 브라우저에 저장됩니다. <span class="en-heading">— Your progress and best score are saved in this browser.</span></li></ul><div class="english-list"><p>• Read each question and select the best answer.</p><p>• Check your answer to see feedback and a short explanation.</p><p>• At the end, review your score and any incorrect answers.</p><p>• Your attempts and best score are saved in this browser.</p><p>• 최근에 나온 문제는 가능한 한 다음 시험에서 제외됩니다.</p><p>• Recently used questions are avoided in your next attempt whenever the question bank allows.</p></div><p class="small">참고: 현재 버전은 객관식 진단 연습입니다. 실제 학교 시험의 문제 유형과 완전히 같지는 않을 수 있습니다.</p><p class="english">Note: This version is a multiple-choice diagnostic practice tool. Its question formats may not exactly match your school examination.</p></div>
 </section>
+
 <section id="vocab" class="view hidden"><div class="panel"><h2>어휘 연습</h2><p class="muted">한국어 단어와 알맞은 영어 뜻을 연결하세요.</p><p class="english">Match each Korean word with its English meaning. (The test questions remain in Korean.)</p><div id="vocabQuiz"></div></div></section>
 <section id="grammar" class="view hidden"><div class="panel"><h2>문법 연습</h2><p class="muted">문맥을 읽고 알맞은 표현을 고르세요.</p><p class="english">Read the context and choose the correct grammar form.</p><div id="grammarQuiz"></div></div></section>
 <section id="mock" class="view hidden"><div class="panel"><h2>종합 모의고사</h2><p class="muted">어휘와 문법 문제를 함께 풉니다.</p><p class="english">Answer a combined set of vocabulary and grammar questions.</p><div id="mockQuiz"></div></div></section>
@@ -215,15 +224,53 @@ let pendingMode="vocab";
 function start(which){pendingMode=which;document.getElementById("settingsModal").classList.remove("hidden")}
 function closeSettings(){document.getElementById("settingsModal").classList.add("hidden")}
 function confirmStart(){closeSettings();beginExam(pendingMode)}
+
+// TOPIK I grammar syllabus: concise English glosses adapted as study labels.
+const topikGrammarPoints=[
+["이/가","subject particle"],["은/는","topic particle"],["을/를","object particle"],["이에요/예요","to be (polite present)"],
+["(이)랑","and; with"],["(이)랑","with (accompaniment)"],["하고","and; with"],["와/과","and; with"],["도","also; too"],
+["에","to; at (destination/time)"],["에서","at; in; from (place of action/source)"],["까지","until; as far as"],["부터","from; starting at"],
+["(으)로","to; toward; by means of"],["께","to (honorific)"],["께서","honorific subject particle"],["에게","to (person/animal)"],
+["에게서","from (person/animal)"],["한테","to (person; colloquial)"],["한테서","from (person; colloquial)"],["(이)나","or; about/as many as"],
+["(이)나","or; rather; even (context-dependent)"],["만","only"],["의","possessive particle; of"],["마다","every; each"],
+["밖에","only (used with a negative)"],["보다","than; compared with"],["처럼","like; as"],["(으)ㄴ 것 같다","seem/think (past or descriptive)"],
+["(으)ㄹ 것 같다","seem likely; think will"],["(으)ㄴ 적이 있다","have had the experience of"],["(으)ㄴ 적이 없다","have never experienced"],["(으)ㄴ 지","time elapsed since"],["(으)ㄴ 지","since an event happened"],
+["(으)ㄴ 후에","after doing"],["(으)ㄴ데(요)","background; contrast; softener"],["(으)ㄴ데(요)","but; although (context-dependent)"],["(으)니까","because; since"],["(으)ㄹ 것이다","will; be going to"],
+["(으)ㄹ 때","when"],["(으)ㄹ 수 있다","can; be able to"],["(으)ㄹ 수 없다","cannot; be unable to"],["(으)ㄹ게요","I will (speaker's intention/promise)"],
+["(으)ㄹ까 하다","be thinking of doing"],["(으)ㄹ까 봐","because one is worried that"],["(으)ㄹ까요?","shall we?; should I/we?"],["(으)ㄹ래요","I will; I choose to"],
+["(으)ㄹ래요?","would you like to?"],["(으)러 가다","go in order to"],["(으)러 오다","come in order to"],["(으)려고","in order to; intending to"],
+["(으)려고요","I am planning/intending to"],["(으)면","if; when"],["(으)면서","while doing"],["(으)ㅂ시다","let's (formal polite suggestion)"],
+["(으)세요","please do; polite request/command"],["(으)십시오","please do (formal polite command)"],["(이)지요?","right?; isn't it? (confirmation)"],["거나","or (between actions/states)"],
+["게","-ly; adverb-forming ending"],["게 되다","come to; end up; happen to"],["고","and; then"],["고 싶다","want to"],["고 있다","be doing; action in progress"],
+["군요","I see; so that's how it is"],["기 때문에","because; due to"],["기 전에","before doing"],["기로 하다","decide to do"],
+["네요","expressing new realisation/surprise"],["는 게 좋겠다","it would be better to"],["는데","background; contrast; context-setting"],["ㅂ/습니까?","formal polite question ending"],
+["ㅂ/습니다","formal polite statement ending"],["아/어/여 보다","try doing; experience doing"],["아/어/여 주다","do something for someone"],["아/어/여야 되다","must; need to"],
+["아/어/여야 하다","must; have to"],["아/어요","polite informal present ending"],["았/었/였으면 좋겠다","wish/hope that"],["지 말다","do not; prohibition"],
+["지 못하다","cannot; be unable to"],["지 않다","not; do not"],["지만","but; although"],["이/가 아니다","to not be; is not"]
+];
+const topikExtraVocab=[
+["가게","store, shop"],["가격","price"],["가구","furniture"],["가깝다","close, nearby"],["가끔","sometimes"],["가다","go"],["가르치다","teach"],["가방","bag"],["가볍다","light"],["가수","singer"],["가을","autumn"],["가장","most"],["가족","family"],["가지다","have"],["간단하다","simple"],["간식","snack"],["감기","cold"],["감자","potato"],["갑자기","suddenly"],["강","river"],["강아지","puppy"],["건강","health"],["건강하다","be healthy"],["걷다","walk"],["겨울","winter"],["결과","result"],["결혼","marriage"],["경찰","police"],["경치","scenery, view"],["계단","stairs"],["계란","egg"],["계절","season"],["계획","plan"],["고기","meat"],["고르다","choose"],["고양이","cat"],["공부하다","study"],["공원","park"],["공항","airport"],["과일","fruit"],["괜찮다","be okay"],["교실","classroom"],["구경하다","look around, sightsee"],["구름","cloud"],["귀엽다","cute"],["기다리다","wait"],["기차","train"],["길다","long"],["김치","kimchi"],["꽃","flower"],["날씨","weather"],["내년","next year"],["내일","tomorrow"],["냉장고","refrigerator"],["노래","song"],["놀다","play"],["높다","high"],["눈","eye; snow"],["다르다","be different"],["다음","next; after"],["달력","calendar"],["덥다","hot (weather)"],["도서관","library"],["도시","city"],["돈","money"],["듣다","listen"],["마시다","drink"],["먹다","eat"],["물","water"],["바쁘다","be busy"],["바지","trousers"],["방","room"],["배우다","learn"],["버스","bus"],["병원","hospital"],["보다","see; watch"],["비","rain"],["사람","person"],["사다","buy"],["시간","time"],["시장","market"],["아침","morning; breakfast"],["오늘","today"],["오다","come"],["음식","food"],["일하다","work"],["친구","friend"],["학교","school"],["한국","Korea"],["학생","student"],["회사","company"]
+];
+function topikVocabPool(){
+ const map=new Map([...vocab,...topikExtraVocab].map(x=>[x[0],x[1]]));
+ const bank=[...map.entries()];
+ return bank.map(([word,meaning])=>{const distract=shuffle(bank.filter(x=>x[0]!==word)).slice(0,3).map(x=>x[1]);const opts=shuffle([meaning,...distract]);return {q:`‘${word}’의 뜻은 무엇입니까?`,o:opts,a:opts.indexOf(meaning),e:`‘${word}’ means “${meaning}”. Choose the meaning that best matches the word.`,word}});
+}
+function topikGrammarPool(){
+ const bank=topikGrammarPoints.map(([pattern,meaning])=>({pattern,meaning}));
+ return bank.map((x)=>{const distract=shuffle(bank.filter(y=>y!==x)).slice(0,3).map(y=>y.meaning);const opts=shuffle([x.meaning,...distract]);return {q:`문법 표현 ‘${x.pattern}’의 뜻으로 가장 알맞은 것은 무엇입니까?`,o:opts,a:opts.indexOf(x.meaning),e:`The grammar pattern “${x.pattern}” means “${x.meaning}”. Check the example sentences in the grammar reference and notice what kind of word or clause the pattern attaches to.`,word:null}});
+}
+
 function beginExam(which){
- clearInterval(timer); mode=which; show(which);
+ clearInterval(timer); mode=which; show(which.startsWith("topik")?"topik":which);
  selectedDifficulty=document.getElementById("difficulty").value;
  timePerQuestion=Number(document.getElementById("timeLimit").value);
  const vocabPool=makeVocab();
+ const topikVocab=topikVocabPool(), topikGrammar=topikGrammarPool();
  const grammarPool=selectedDifficulty==="easy"?[...grammar.slice(0,17),...extraGrammar.slice(0,8)]:[...grammar,...advancedGrammar,...extraGrammar];
  const hardWords=hardVocabItems.map(x=>{const pairs=x.o.map((v,i)=>({v,correct:i===x.a}));const shuffled=shuffle(pairs);return {...x,o:shuffled.map(p=>p.v),a:shuffled.findIndex(p=>p.correct)}});
- let pool=which==="vocab"?(selectedDifficulty==="easy"?vocabPool:hardWords):which==="grammar"?grammarPool:shuffle(selectedDifficulty==="easy"?[...shuffle(vocabPool).slice(0,6),...shuffle(grammarPool).slice(0,6)]:[...shuffle(hardWords).slice(0,10),...shuffle(grammarPool).slice(0,10)]);
- const count=which==="mock"?(selectedDifficulty==="easy"?12:20):(selectedDifficulty==="easy"?8:12);
+ let pool=which==="topikVocab"?topikVocab:which==="topikGrammar"?topikGrammar:which==="topikMock"?shuffle([...shuffle(topikVocab).slice(0,10),...shuffle(topikGrammar).slice(0,10)]):which==="vocab"?(selectedDifficulty==="easy"?vocabPool:hardWords):which==="grammar"?grammarPool:shuffle(selectedDifficulty==="easy"?[...shuffle(vocabPool).slice(0,6),...shuffle(grammarPool).slice(0,6)]:[...shuffle(hardWords).slice(0,10),...shuffle(grammarPool).slice(0,10)]);
+ const count=which==="topikMock"?20:which.startsWith("topik")?12:which==="mock"?(selectedDifficulty==="easy"?12:20):(selectedDifficulty==="easy"?8:12);
  const historyKey=`recentQuestions_${which}_${selectedDifficulty}`;
  let history=[];try{history=JSON.parse(localStorage.getItem(historyKey)||"[]")}catch(e){history=[]}
  const keyOf=x=>x.q;
@@ -238,7 +285,7 @@ function beginExam(which){
 function makeVocab(){return vocab.map(([word,meaning])=>{let distract=shuffle(vocab.filter(x=>x[0]!==word)).slice(0,3).map(x=>x[1]);let opts=shuffle([meaning,...distract]);return {q:`‘${word}’의 뜻은 무엇입니까?`,o:opts,a:opts.indexOf(meaning),e:`‘${word}’은/는 ‘${meaning}’이라는 뜻입니다.`,word}})}
 function render(){
  clearInterval(timer);answered=false;
- let root=document.getElementById(mode==="mock"?"mockQuiz":mode+"Quiz"),item=current[idx];
+ let root=document.getElementById(mode==="topikVocab"||mode==="topikGrammar"||mode==="topikMock"?"topikQuiz":mode==="mock"?"mockQuiz":mode+"Quiz"),item=current[idx];
  root.innerHTML=`<div class="row"><div><b>문제 ${idx+1} / ${current.length}</b><div class="progress"><span style="width:${idx/current.length*100}%"></span></div></div><div style="text-align:right"><b>현재 점수: ${score}</b><div id="countdown" class="small"></div></div></div><div class="question">${item.q}</div><div class="options">${item.o.map((x,i)=>`<button class="option" data-i="${i}">${["①","②","③","④"][i]}　${x}</button>`).join("")}</div><div id="feedback"></div><div class="row" style="margin-top:16px"><button class="secondary" onclick="show('home');clearInterval(timer)">시험 나가기</button><button class="primary" id="next" disabled>${idx===current.length-1?"결과 보기":"다음 문제"}</button></div>`;
  root.querySelectorAll(".option").forEach(b=>b.onclick=()=>choose(+b.dataset.i));
  root.querySelector("#next").onclick=next;
@@ -285,26 +332,30 @@ function getDetailedExplanation(item){
   const meaning=vocab.find(v=>v[0]===item.word)?.[1]||"";
   return {ko:`어휘 ‘${item.word}’의 뜻은 ‘${meaning}’입니다. 문장이나 상황 속에서 이 단어가 어떤 의미로 쓰이는지 함께 기억하세요. 단어를 단독으로 외우는 것보다 자주 쓰이는 표현과 함께 연습하면 더 오래 기억할 수 있습니다.`,en:`The correct meaning of “${item.word}” is “${meaning}.” Try to remember this word in a phrase or real-life situation, not only as an isolated translation. Learning common word combinations will help you recognise and use it more naturally.`};
  }
- if(!english) english=`The correct answer is “${item.o[item.a]}”. It fits the grammar and meaning required by the sentence. Read the whole sentence, identify the time, condition, reason or relationship between the clauses, and then check which form expresses that meaning. The other options do not fit this context as naturally.`;
+ if(!english) {
+  const answer=item.o[item.a];
+  const sentence=(item.q||"").replace(/_{2,}|___|____/g,`【${answer}】`);
+  const optionNotes=item.o.map((opt,i)=>`${i===item.a?"✓":"✗"} ${opt}${i===item.a?" — correct": " — not the form/meaning required here"}`).join("\\n");
+  english=`Correct answer: “${answer}”.\n\nCompleted sentence: ${sentence}\n\nWhy it is correct: ${e||"The sentence context requires this expression."}\n\nHow to work it out: First, read the words before and after the blank. Look for clues showing time, sequence, reason, contrast, condition, ability or intention. Then check whether the answer has the right grammatical form for the word it follows. Finally, read the completed sentence from beginning to end and check that its meaning is logical.\n\nOption check:\n${optionNotes}\n\nStudy point: Do not memorise only the answer. Memorise the pattern together with its function and one example sentence, then try making a new sentence of your own.`;
+ }
  return {ko:`${e} 문장 전체의 의미와 앞뒤 내용의 관계를 확인하는 것이 중요합니다. 정답 표현이 어떤 문법 기능을 하는지 생각하고, 비슷해 보이는 다른 표현과 의미나 활용 형태가 어떻게 다른지도 비교해 보세요.`,en:english};
 }
 
 
 function sentenceBreakdown(item){
- const q=item.q||"";
- const quoted=(q.match(/[가-힣][^‘’“”"]*[가-힣?!.]/g)||[]).filter(s=>s.length>7);
- const sentence=quoted[0]||q.replace(/_{2,}|___|____/g,"[빈칸]");
+ const q=item.q||"", answer=item.o?.[item.a]||"";
+ const sentence=q.replace(/_{2,}|___|____/g,`【${answer}】`);
  const meaning=q.includes("비행기표를 인터넷으로") ?
    "After booking the plane ticket online, I made my travel plans." :
-   item.word ? `The question asks for the meaning of “${item.word}”.` :
-   (q.includes("뜻은 무엇입니까") ? "What does the Korean word mean?" :
-   "Read the whole sentence and use the surrounding words to identify the meaning and grammar of the blank.");
- const matches=(typeof vocab!=="undefined"?vocab:[]).filter(([w])=>sentence.includes(w)).slice(0,7);
- const vocabLine=matches.length?matches.map(([w,m])=>`${w} = ${m}`).join(" · "):"Focus on the verb ending and the words immediately before and after the blank.";
+   item.word ? `The target word is “${item.word}”. Its meaning is explained above.` :
+   "This is a sentence-completion question. The full English translation depends on the exact vocabulary and grammar in the sentence; use the clause-by-clause notes below rather than guessing from the blank alone.";
+ const words=(typeof vocab!=="undefined"?vocab:[]).filter(([w])=>sentence.includes(w)).slice(0,8);
+ const vocabLine=words.length?words.map(([w,m])=>`${w} = ${m}`).join(" · "):"No exact match from the core vocabulary list was found. Check the verb/adjective stem, particles, and ending around the blank.";
  const grammarHint=q.includes("비행기표를 인터넷으로") ?
-   "Pattern: Verb-(으)ㄴ 다음에 = after doing something. 예매하다 → 예매한. The first action (booking) is completed before the second action (making travel plans)." :
-   item.word?"Vocabulary focus: identify the word and connect it with its English meaning.":(item.e||"Look at the sentence ending and the relationship between the clauses.");
- return {sentence,meaning,vocabLine,grammarHint};
+   "Verb-(으)ㄴ 다음에 = after doing something. 예매하다 → 예매한. The booking is completed first; making the travel plan happens afterwards." :
+   (item.e||"Use the meaning and grammatical form required by the sentence.");
+ const choices=(item.o||[]).map((v,i)=>`${i===item.a?"✓":"✗"} ${v}${i===item.a?" (correct answer)":""}`).join(" · ");
+ return {sentence,meaning,vocabLine,grammarHint,choices};
 }
 function sentenceBreakdownHTML(item){
  const b=sentenceBreakdown(item);
@@ -314,6 +365,7 @@ function sentenceBreakdownHTML(item){
  <p style="margin:7px 0"><b>English:</b> ${b.meaning}</p>
  <p style="margin:7px 0"><b>핵심 어휘 / Key vocabulary:</b> ${b.vocabLine}</p>
  <p style="margin:7px 0"><b>문법과 문맥 / Grammar & context:</b> ${b.grammarHint}</p>
+ <p style="margin:7px 0"><b>선택지 확인 / Option check:</b> ${b.choices}</p>
  </div>`;
 }
 
@@ -326,8 +378,10 @@ function choose(n){
  root.querySelector("#next").disabled=false;
 }
 function next(){idx++;if(idx<current.length)render();else result()}
-function result(){const historyKey=`recentQuestions_${mode}_${selectedDifficulty}`;let prior=[];try{prior=JSON.parse(localStorage.getItem(historyKey)||"[]")}catch(e){};localStorage.setItem(historyKey,JSON.stringify([...current.map(x=>x.q),...prior].slice(0,Math.max(24,current.length*2))));let root=document.getElementById(mode==="mock"?"mockQuiz":mode+"Quiz");let pct=Math.round(score/current.length*100);let best=Number(localStorage.bestScore||0);if(pct>best)localStorage.bestScore=pct;localStorage.attempts=Number(localStorage.attempts||0)+1;updateStats();root.innerHTML=`<h2>시험 결과</h2><div class="row"><div class="stat"><strong>${score} / ${current.length}</strong><span class="small">맞힌 문제</span></div><div class="stat"><strong>${pct}%</strong><span class="small">점수</span></div></div><p>${pct>=80?"잘했어요! 계속 연습하세요.":pct>=60?"좋아요. 틀린 문제를 다시 확인해 보세요.":"괜찮아요. 어휘와 문법을 다시 복습해 보세요."}</p><h3>다시 확인할 문제 (${wrong.length})</h3>${wrong.length?wrong.map(w=>`<div class="rule"><b>${w.q}</b><br>내 답: ${w.chosen}<br>정답: <b>${w.answer}</b><br><span class="small">${w.e}</span><p><b>English explanation</b><br>${w.en||"Review the explanation shown above and compare the correct answer with the sentence context."}</p><p><b>Sentence breakdown / 문장별 분석</b><br><b>한국어:</b> ${w.breakdown?.sentence||w.q}<br><b>English:</b> ${w.breakdown?.meaning||"Review the sentence meaning in context."}<br><b>Key vocabulary:</b> ${w.breakdown?.vocabLine||"Review the key words."}<br><b>Grammar & context:</b> ${w.breakdown?.grammarHint||w.e}</p></div>`).join(""):"틀린 문제가 없습니다."}<div class="row" style="margin-top:18px"><button class="secondary" onclick="show('home')">처음으로</button><button class="primary" onclick="start('${mode}')">다시 시험 보기</button></div>`}
-function updateStats(){document.getElementById("savedAttempts").textContent=localStorage.attempts||0;document.getElementById("bestScore").textContent=localStorage.bestScore?localStorage.bestScore+"%":"—";document.getElementById("vocabCount").textContent=vocab.length}
+function result(){const historyKey=`recentQuestions_${mode}_${selectedDifficulty}`;let prior=[];try{prior=JSON.parse(localStorage.getItem(historyKey)||"[]")}catch(e){};localStorage.setItem(historyKey,JSON.stringify([...current.map(x=>x.q),...prior].slice(0,Math.max(24,current.length*2))));let root=document.getElementById(mode==="topikVocab"||mode==="topikGrammar"||mode==="topikMock"?"topikQuiz":mode==="mock"?"mockQuiz":mode+"Quiz");let pct=Math.round(score/current.length*100);let best=Number(localStorage.bestScore||0);if(pct>best)localStorage.bestScore=pct;localStorage.attempts=Number(localStorage.attempts||0)+1;
+ if(mode.startsWith("topik")){localStorage.topikAttempts=Number(localStorage.topikAttempts||0)+1;const tb=Number(localStorage.topikBestScore||0);if(pct>tb)localStorage.topikBestScore=pct;}
+ updateStats();root.innerHTML=`<h2>${mode.startsWith("topik")?"TOPIK I ":""}시험 결과</h2><div class="row"><div class="stat"><strong>${score} / ${current.length}</strong><span class="small">맞힌 문제</span></div><div class="stat"><strong>${pct}%</strong><span class="small">점수</span></div></div><p>${pct>=80?"잘했어요! 계속 연습하세요.":pct>=60?"좋아요. 틀린 문제를 다시 확인해 보세요.":"괜찮아요. 어휘와 문법을 다시 복습해 보세요."}</p><h3>다시 확인할 문제 (${wrong.length})</h3>${wrong.length?wrong.map(w=>`<div class="rule"><b>${w.q}</b><br>내 답: ${w.chosen}<br>정답: <b>${w.answer}</b><br><span class="small">${w.e}</span><p><b>English explanation</b><br>${w.en||"Review the explanation shown above and compare the correct answer with the sentence context."}</p><p><b>Sentence breakdown / 문장별 분석</b><br><b>한국어:</b> ${w.breakdown?.sentence||w.q}<br><b>English:</b> ${w.breakdown?.meaning||"Review the sentence meaning in context."}<br><b>Key vocabulary:</b> ${w.breakdown?.vocabLine||"Review the key words."}<br><b>Grammar & context:</b> ${w.breakdown?.grammarHint||w.e}</p></div>`).join(""):"틀린 문제가 없습니다."}<div class="row" style="margin-top:18px"><button class="secondary" onclick="show('home')">처음으로</button><button class="primary" onclick="start('${mode}')">다시 시험 보기</button></div>`}
+function updateStats(){document.getElementById("savedAttempts").textContent=localStorage.attempts||0;document.getElementById("bestScore").textContent=localStorage.bestScore?localStorage.bestScore+"%":"—";document.getElementById("vocabCount").textContent=vocab.length;const ta=document.getElementById("topikAttempts");if(ta)ta.textContent=localStorage.topikAttempts||0;const tb=document.getElementById("topikBest");if(tb)tb.textContent=localStorage.topikBestScore?localStorage.topikBestScore+"%":"—"}
 function renderWords(filter=""){let arr=vocab.filter(x=>x[0].includes(filter)||x[1].toLowerCase().includes(filter.toLowerCase()));document.getElementById("wordGrid").innerHTML=arr.map(x=>`<div class="word"><b>${x[0]}</b><span>${x[1]}</span></div>`).join("");document.getElementById("listCount").textContent=arr.length}
 document.getElementById("search").addEventListener("input",e=>renderWords(e.target.value.trim()));renderWords();updateStats();
 function applyTheme(theme){
