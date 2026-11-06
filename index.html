@@ -277,6 +277,10 @@ function getDetailedExplanation(item){
   ["-(으)ㄴ/는데","This ending introduces background information or a contrast. It helps the listener understand the situation before the speaker adds a new point."],
  ];
  let english=rules.find(([key])=>e.includes(key)||item.q.includes(key))?.[1];
+ // Item-specific teaching notes for questions where the target form is best explained in context.
+ if(item.q.includes("비행기표를 인터넷으로") && item.q.includes("다음에")){
+  english=`The correct answer is “예매한”. The full sentence is “비행기표를 인터넷으로 예매한 다음에 여행 계획을 세웠어요.” It means “After booking the plane ticket online, I made my travel plans.”\n\nWhy 예매한? The key clue is “다음에” (after). Korean uses the pattern “verb-(으)ㄴ 다음에” to mean “after doing something”. 예매하다 ends in 하다, so its past modifier form is 예매한: 예매하 + ㄴ → 예매한. The modifier describes the completed action that happens before the next action.\n\nSentence structure: 비행기표를 (the plane ticket, object) + 인터넷으로 (using the internet) + 예매한 다음에 (after booking) + 여행 계획을 세웠어요 (I made travel plans). “세우다” is commonly used with 계획: 계획을 세우다 = to make a plan.\n\nWhy not the others? “끓인” means boiled, so it does not make sense with a plane ticket. “버린” means threw away, which conflicts with the intended sequence of preparing for a trip. “입은” means wore, and clothes are worn rather than plane tickets. The grammar pattern and the meaning of the verb both point to “예매한”.`;
+ }
  if(item.word){
   const meaning=vocab.find(v=>v[0]===item.word)?.[1]||"";
   return {ko:`어휘 ‘${item.word}’의 뜻은 ‘${meaning}’입니다. 문장이나 상황 속에서 이 단어가 어떤 의미로 쓰이는지 함께 기억하세요. 단어를 단독으로 외우는 것보다 자주 쓰이는 표현과 함께 연습하면 더 오래 기억할 수 있습니다.`,en:`The correct meaning of “${item.word}” is “${meaning}.” Try to remember this word in a phrase or real-life situation, not only as an isolated translation. Learning common word combinations will help you recognise and use it more naturally.`};
@@ -290,12 +294,16 @@ function sentenceBreakdown(item){
  const q=item.q||"";
  const quoted=(q.match(/[가-힣][^‘’“”"]*[가-힣?!.]/g)||[]).filter(s=>s.length>7);
  const sentence=quoted[0]||q.replace(/_{2,}|___|____/g,"[빈칸]");
- const meaning=item.word ? `The question asks for the meaning of “${item.word}”.` :
+ const meaning=q.includes("비행기표를 인터넷으로") ?
+   "After booking the plane ticket online, I made my travel plans." :
+   item.word ? `The question asks for the meaning of “${item.word}”.` :
    (q.includes("뜻은 무엇입니까") ? "What does the Korean word mean?" :
-   "Read the full Korean sentence first. The blank or answer choice is understood from the sentence context.");
+   "Read the whole sentence and use the surrounding words to identify the meaning and grammar of the blank.");
  const matches=(typeof vocab!=="undefined"?vocab:[]).filter(([w])=>sentence.includes(w)).slice(0,7);
  const vocabLine=matches.length?matches.map(([w,m])=>`${w} = ${m}`).join(" · "):"Focus on the verb ending and the words immediately before and after the blank.";
- const grammarHint=item.word?"Vocabulary focus: identify the word and connect it with its English meaning.":(item.e||"Look at the sentence ending and the relationship between the clauses.");
+ const grammarHint=q.includes("비행기표를 인터넷으로") ?
+   "Pattern: Verb-(으)ㄴ 다음에 = after doing something. 예매하다 → 예매한. The first action (booking) is completed before the second action (making travel plans)." :
+   item.word?"Vocabulary focus: identify the word and connect it with its English meaning.":(item.e||"Look at the sentence ending and the relationship between the clauses.");
  return {sentence,meaning,vocabLine,grammarHint};
 }
 function sentenceBreakdownHTML(item){
