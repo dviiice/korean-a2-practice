@@ -44,7 +44,66 @@ body[data-theme="dark"] .feedback.good{background:#193d31;color:#b7f0ce}
 body[data-theme="dark"] .feedback.bad{background:#48272d;color:#ffd0d0}
 body[data-theme="dark"] .rule{background:#302d25}
 body[data-theme="dark"] .english,body[data-theme="dark"] .english-list p,body[data-theme="dark"] .en-heading{color:#b6c3d2}
+
+/* Expanded dark theme: cover all page surfaces and controls, including modal and dynamically rendered content. */
+body[data-theme="dark"]{color-scheme:dark;background:var(--bg);color:var(--ink)}
+body[data-theme="dark"] main,
+body[data-theme="dark"] .view{color:var(--ink)}
+body[data-theme="dark"] .panel,
+body[data-theme="dark"] .modal,
+body[data-theme="dark"] .stat,
+body[data-theme="dark"] .word,
+body[data-theme="dark"] .option,
+body[data-theme="dark"] .tab,
+body[data-theme="dark"] .feedback,
+body[data-theme="dark"] .rule{color:var(--ink);border-color:var(--line)}
+body[data-theme="dark"] .panel{background:var(--paper);box-shadow:0 2px 7px #0004}
+body[data-theme="dark"] .stat{background:#182332}
+body[data-theme="dark"] .word{background:#202b3a}
+body[data-theme="dark"] h1,
+body[data-theme="dark"] h2,
+body[data-theme="dark"] h3,
+body[data-theme="dark"] .stat strong{color:var(--navy)}
+body[data-theme="dark"] p,
+body[data-theme="dark"] li,
+body[data-theme="dark"] label{color:var(--ink)}
+body[data-theme="dark"] .muted,
+body[data-theme="dark"] .small,
+body[data-theme="dark"] .word span{color:var(--muted)}
+body[data-theme="dark"] .option{background:#202b3a;color:var(--ink)}
+body[data-theme="dark"] .option.selected{background:var(--pale);border-color:var(--blue)}
+body[data-theme="dark"] .option.correct{background:#193d31;color:#b7f0ce}
+body[data-theme="dark"] .option.wrong{background:#48272d;color:#ffd0d0}
+body[data-theme="dark"] .primary{background:var(--blue);color:#fff}
+body[data-theme="dark"] .secondary{background:#344256;color:#edf3fb;border-color:#526176}
+body[data-theme="dark"] .danger{background:#48272d;color:#ffd0d0}
+body[data-theme="dark"] input,
+body[data-theme="dark"] select,
+body[data-theme="dark"] textarea{background:#202b3a!important;color:#e7edf5!important;border-color:var(--line)!important;-webkit-text-fill-color:#e7edf5}
+body[data-theme="dark"] select option{background:#202b3a;color:#e7edf5}
+body[data-theme="dark"] .progress{background:#354255}
+body[data-theme="dark"] .feedback{background:#293647;color:var(--ink)}
+body[data-theme="dark"] .feedback.good{background:#193d31;color:#b7f0ce}
+body[data-theme="dark"] .feedback.bad{background:#48272d;color:#ffd0d0}
+body[data-theme="dark"] .rule{background:#302d25;color:#f0e7d5}
+body[data-theme="dark"] .modal-backdrop{background:#050a12cc}
+body[data-theme="dark"] a{color:#9fc5ff}
+body[data-theme="dark"] .tab.active{background:var(--blue);color:#fff}
+
 </style>
+<script>
+(function(){
+  try {
+    var savedTheme = localStorage.getItem("siteTheme") || "light";
+    document.documentElement.dataset.theme = savedTheme;
+    document.addEventListener("DOMContentLoaded", function(){
+      document.body.dataset.theme = savedTheme;
+      var toggle = document.getElementById("themeToggle");
+      if (toggle) toggle.textContent = savedTheme === "dark" ? "☀ Light mode" : "☾ Dark mode";
+    });
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
 <header><div class="wrap"><button class="theme-toggle" id="themeToggle" type="button">☾ Dark mode</button><div class="eyebrow">KOREAN LANGUAGE · TOPIK I</div><h1>TOPIK I 종합 연습</h1><p>어휘 · 문법 · 종합 모의고사</p><p class="english">TOPIK I Training · Vocabulary, grammar and mixed mock exams</p></div></header>
@@ -398,6 +457,7 @@ function renderWords(filter=""){let arr=vocab.filter(x=>x[0].includes(filter)||x
 document.getElementById("search").addEventListener("input",e=>renderWords(e.target.value.trim()));renderWords();updateStats();
 function applyTheme(theme){
  document.body.dataset.theme=theme;
+ document.documentElement.dataset.theme=theme;
  const btn=document.getElementById("themeToggle");
  btn.textContent=theme==="dark"?"☀ Light mode":"☾ Dark mode";
  localStorage.siteTheme=theme;
