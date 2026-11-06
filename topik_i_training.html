@@ -455,14 +455,29 @@ function result(){const historyKey=`recentQuestions_${mode}_${selectedDifficulty
 function updateStats(){document.getElementById("savedAttempts").textContent=localStorage.attempts||0;document.getElementById("bestScore").textContent=localStorage.bestScore?localStorage.bestScore+"%":"—";document.getElementById("vocabCount").textContent=vocab.length;const ta=document.getElementById("topikAttempts");if(ta)ta.textContent=localStorage.topikAttempts||0;const tb=document.getElementById("topikBest");if(tb)tb.textContent=localStorage.topikBestScore?localStorage.topikBestScore+"%":"—"}
 function renderWords(filter=""){let arr=vocab.filter(x=>x[0].includes(filter)||x[1].toLowerCase().includes(filter.toLowerCase()));document.getElementById("wordGrid").innerHTML=arr.map(x=>`<div class="word"><b>${x[0]}</b><span>${x[1]}</span></div>`).join("");document.getElementById("listCount").textContent=arr.length}
 document.getElementById("search").addEventListener("input",e=>renderWords(e.target.value.trim()));renderWords();updateStats();
-function applyTheme(theme){
- document.body.dataset.theme=theme;
- document.documentElement.dataset.theme=theme;
- const btn=document.getElementById("themeToggle");
- btn.textContent=theme==="dark"?"☀ Light mode":"☾ Dark mode";
- localStorage.siteTheme=theme;
-}
-document.getElementById("themeToggle").addEventListener("click",()=>applyTheme(document.body.dataset.theme==="dark"?"light":"dark"));
-applyTheme(localStorage.siteTheme||"light");
 </script>
+<script>
+(function () {
+  var button = document.getElementById("themeToggle");
+  if (!button) return;
+
+  function setTheme(theme) {
+    var dark = theme === "dark";
+    document.body.setAttribute("data-theme", dark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    button.textContent = dark ? "☀ Light mode" : "☾ Dark mode";
+    try { localStorage.setItem("siteTheme", dark ? "dark" : "light"); } catch (e) {}
+  }
+
+  var saved = "light";
+  try { saved = localStorage.getItem("siteTheme") || "light"; } catch (e) {}
+  setTheme(saved);
+
+  button.addEventListener("click", function () {
+    var current = document.body.getAttribute("data-theme");
+    setTheme(current === "dark" ? "light" : "dark");
+  });
+})();
+</script>
+
 </body></html>
