@@ -284,7 +284,7 @@ const extraGrammar=[
 {q:"지금 요리하___ 음악을 듣고 있어요.",o:["면서","지만","으면","려고"],a:0,e:"두 행동이 동시에 일어나므로 ‘-(으)면서’를 사용합니다."}
 ];
 
-let current=[],idx=0,score=0,answered=false,mode="vocab",wrong=[],timer=null,secondsLeft=0,selectedDifficulty="easy",timePerQuestion=30;
+let current=[],idx=0,score=0,answered=false,selectedAnswer=null,mode="vocab",wrong=[],timer=null,secondsLeft=0,selectedDifficulty="easy",timePerQuestion=30;
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
 function show(view){document.querySelectorAll(".view").forEach(x=>x.classList.add("hidden"));document.getElementById(view).classList.remove("hidden");document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.view===view))}
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
@@ -357,12 +357,22 @@ function beginExam(which){
 }
 function makeVocab(){return vocab.map(([word,meaning])=>{let distract=shuffle(vocab.filter(x=>x[0]!==word)).slice(0,3).map(x=>x[1]);let opts=shuffle([meaning,...distract]);return {q:`‘${word}’의 뜻은 무엇입니까?`,o:opts,a:opts.indexOf(meaning),e:`‘${word}’은/는 ‘${meaning}’이라는 뜻입니다.`,word}})}
 function render(){
- clearInterval(timer);answered=false;
+ clearInterval(timer);answered=false;selectedAnswer=null;
  let root=document.getElementById(mode==="topikVocab"||mode==="topikGrammar"||mode==="topikMock"?"topikQuiz":mode==="mock"?"mockQuiz":mode+"Quiz"),item=current[idx];
  root.innerHTML=`<div class="row"><div><b>문제 ${idx+1} / ${current.length}</b><div class="progress"><span style="width:${idx/current.length*100}%"></span></div></div><div style="text-align:right"><b>현재 점수: ${score}</b><div id="countdown" class="small"></div></div></div><div class="question">${item.q}</div><div class="options">${item.o.map((x,i)=>`<button class="option" data-i="${i}">${["①","②","③","④"][i]}　${x}</button>`).join("")}</div><div id="feedback"></div><div class="row" style="margin-top:16px"><button class="secondary" onclick="show('home');clearInterval(timer)">시험 나가기</button><button class="primary" id="next" disabled>${idx===current.length-1?"결과 보기":"다음 문제"}</button></div>`;
- root.querySelectorAll(".option").forEach(b=>b.onclick=()=>choose(+b.dataset.i));
+ root.querySelectorAll(".option").forEach(b=>b.onclick=()=>selectOption(+b.dataset.i));
  root.querySelector("#next").onclick=next;
  if(timePerQuestion>0){secondsLeft=timePerQuestion;updateTimer();timer=setInterval(()=>{secondsLeft--;updateTimer();if(secondsLeft<=0){clearInterval(timer);if(!answered)choose(-1)}},1000)}
+}
+function selectOption(n){
+ if(answered)return;
+ selectedAnswer=n;
+ const root=document.getElementById(mode==="topikVocab"||mode==="topikGrammar"||mode==="topikMock"?"topikQuiz":mode==="mock"?"mockQuiz":mode+"Quiz");
+ root.querySelectorAll(".option").forEach((b,i)=>b.classList.toggle("selected",i===n));
+ const feedback=root.querySelector("#feedback");
+ feedback.className="feedback";
+ feedback.innerHTML=`<div style="margin-bottom:10px">선택한 답: <b>${current[idx].o[n]}</b> — 확인 버튼을 누르기 전에는 답으로 제출되지 않습니다.<br><span class="small">Your choice is not submitted until you confirm it.</span></div><button type="button" class="primary" id="confirmAnswer">선택 확인 / Confirm answer</button>`;
+ root.querySelector("#confirmAnswer").onclick=()=>choose(selectedAnswer);
 }
 function updateTimer(){let el=document.getElementById("countdown");if(el)el.textContent=`남은 시간: ${secondsLeft}초`}
 
@@ -400,6 +410,17 @@ function getDetailedExplanation(item){
  const question=item.q||"";
  const note=item.e||"";
  const completed=question.replace(/_{2,}|___|____/g,`【${answer}】`);
+ if(question==="감기에 걸려서 목이 아프고 몸도 많이 ________."){
+   const whyKo="‘감기에 걸려서’는 감기 때문에 아프다는 이유를 말합니다. ‘목이 아프고’는 목에 통증이 있다는 뜻이고, ‘몸도 많이’는 몸 전체의 상태를 덧붙입니다. 감기에 걸리고 목까지 아픈 상황에서 몸의 상태를 설명하는 자연스러운 말은 ‘피곤하다’(to be tired / feel fatigued)입니다. ‘피곤해요’는 피곤하다의 해요체 현재형으로, 지금 몸이 지쳐 있다는 뜻입니다.";
+   const whyEn="The sentence gives two clues about being unwell: 감기에 걸려서 means ‘because [I] caught a cold’, and 목이 아프고 means ‘[my] throat hurts, and…’. The phrase 몸도 많이 means ‘my body also feels very…’, so the blank should describe a physical condition. 피곤하다 means ‘to be tired / feel fatigued’; 피곤해요 is its polite present form. The completed sentence means: ‘Because I have a cold, my throat hurts and my body feels very tired too.’";
+   const choices=(item.o||[]).map((choice,i)=>{
+     const gloss=choiceMeaning(choice);
+     const reason=choice==="피곤해요"?"describes the speaker’s physical condition and fits the illness clues":choice==="친절해요"?"means ‘kind’; it describes personality or behaviour toward others, not physical tiredness":choice==="단순해요"?"means ‘simple’; it describes complexity, not how the body feels":choice==="비슷해요"?"means ‘similar’; it normally compares two or more things and does not describe this physical condition":"does not describe the physical condition indicated by the sentence";
+     return `${i===item.a?"✓":"✗"} ${choice}${gloss?` — ${gloss}`:""} — ${reason}`;
+   }).join("\n");
+   return {ko:`${whyKo}\n\n정답: ${answer}\n완성 문장: ${completed}\n\n선택지 분석:\n${choices}`,en:`Correct answer: “${answer}”.\n\nWhy it fits: ${whyEn}\n\nOption check:\n${choices}\n\nStudy point: Learn 피곤하다 as a description of a person's physical state. Compare it with 친절하다 (kind), 단순하다 (simple), and 비슷하다 (similar).`};
+ }
+
  if(question==="길을 잘 몰라서 지나가는 사람에게 지하철역을 ________."){
    const why="‘길을 잘 몰라서’는 길을 모른다는 이유이고, ‘지나가는 사람에게 지하철역을’은 그 사람에게 정보를 질문했다는 뜻입니다. 그래서 ‘물어보다’(to ask)가 문맥에 맞습니다. ‘물어봤어요’는 물어보다의 과거형 + 해요체이며, 이미 질문한 일을 말합니다.";
    const whyEn="The first clause, 길을 잘 몰라서, gives the reason: the speaker did not know the way. The phrase 지나가는 사람에게 marks the person being asked, and 지하철역을 is the information being asked about. 물어보다 means ‘to ask’; 물어봤어요 is its past-tense polite form, so it says the speaker asked a passer-by where the subway station was.";
@@ -409,6 +430,13 @@ function getDetailedExplanation(item){
 
 
  // Vocabulary items are identified by their explicit word property; no substring guessing.
+ if((item.q||"")==="감기에 걸려서 목이 아프고 몸도 많이 ________.") return {
+   sentence:`감기에 걸려서 목이 아프고 몸도 많이 【${answer}】.`,
+   meaning:"Because I have a cold, my throat hurts and my body feels very tired too.",
+   vocabLine:"감기에 걸리다 = to catch a cold; 목이 아프다 = one's throat hurts; 몸 = body; 피곤하다 = to be tired / feel fatigued.",
+   grammarHint:"몸도 많이 + adjective describes the body's condition. The cold and sore throat establish an illness context, so an adjective describing physical fatigue fits.",
+   choices:(item.o||[]).map((v,i)=>`${i===item.a?"✓":"✗"} ${v}${v==="피곤해요"?" — tired; describes a physical condition":v==="친절해요"?" — kind; describes personality/behaviour":v==="단순해요"?" — simple; describes complexity":v==="비슷해요"?" — similar; compares things":""}`).join(" · ")
+ };
  if(item.word){
    const entry=[...vocab,...topikExtraVocab].find(([word])=>word===item.word);
    const meaning=entry?.[1]||item.meaning||"";
