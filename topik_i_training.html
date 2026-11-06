@@ -150,8 +150,9 @@ body[data-theme="dark"] .tab.active{background:var(--blue);color:#fff}
 <p class="small">TOPIK I 학습용 어휘 연습은 현재 내장된 단어 은행과 학기 어휘를 함께 사용합니다. 전체 공식/참고 어휘표는 위 PDF에서 확인할 수 있습니다.</p>
 <p class="english">The built-in vocabulary quiz combines the current semester word bank with an additional TOPIK I starter set. Use the linked PDF as the full reference list.</p>
 </div>
-<div class="panel"><h3>문법 범위 / Grammar coverage</h3><p class="english">The grammar practice is based on the 84 beginner grammar entries in your reference PDF. The first version includes meaning checks; contextual examples are being expanded.</p><details><summary>문법 목록 보기 / View grammar list</summary><div id="topikGrammarList" class="wordgrid"></div></details><div id="topikQuiz"></div></div>
+<div class="panel"><h3>문법 범위 / Grammar coverage</h3><p class="english">The grammar practice is based on the 84 beginner grammar entries in your reference PDF. The first version includes meaning checks; contextual examples are being expanded.</p><details><summary>문법 목록 보기 / View grammar list</summary><div id="topikGrammarList" class="wordgrid"></div></details></div>
 </section>
+<section id="topikExam" class="view hidden"><div class="panel"><div id="topikQuiz"></div></div></section>
 <section id="vocab" class="view hidden"><div class="panel"><h2>어휘 연습</h2><p class="muted">한국어 단어와 알맞은 영어 뜻을 연결하세요.</p><p class="english">Match each Korean word with its English meaning. (The test questions remain in Korean.)</p><div id="vocabQuiz"></div></div></section>
 <section id="grammar" class="view hidden"><div class="panel"><h2>문법 연습</h2><p class="muted">문맥을 읽고 알맞은 표현을 고르세요.</p><p class="english">Read the context and choose the correct grammar form.</p><div id="grammarQuiz"></div></div></section>
 <section id="mock" class="view hidden"><div class="panel"><h2>종합 모의고사</h2><p class="muted">어휘와 문법 문제를 함께 풉니다.</p><p class="english">Answer a combined set of vocabulary and grammar questions.</p><div id="mockQuiz"></div></div></section>
@@ -335,7 +336,7 @@ function topikGrammarPool(){
 }
 
 function beginExam(which){
- clearInterval(timer); mode=which; show(which.startsWith("topik")?"topik":which);
+ clearInterval(timer); mode=which; show(which.startsWith("topik")?"topikExam":which);
  selectedDifficulty=document.getElementById("difficulty").value;
  timePerQuestion=Number(document.getElementById("timeLimit").value);
  const vocabPool=makeVocab();
@@ -359,7 +360,7 @@ function makeVocab(){return vocab.map(([word,meaning])=>{let distract=shuffle(vo
 function render(){
  clearInterval(timer);answered=false;selectedAnswer=null;
  let root=document.getElementById(mode==="topikVocab"||mode==="topikGrammar"||mode==="topikMock"?"topikQuiz":mode==="mock"?"mockQuiz":mode+"Quiz"),item=current[idx];
- root.innerHTML=`<div class="row"><div><b>문제 ${idx+1} / ${current.length}</b><div class="progress"><span style="width:${idx/current.length*100}%"></span></div></div><div style="text-align:right"><b>현재 점수: ${score}</b><div id="countdown" class="small"></div></div></div><div class="question">${item.q}</div><div class="options">${item.o.map((x,i)=>`<button class="option" data-i="${i}">${["①","②","③","④"][i]}　${x}</button>`).join("")}</div><div id="feedback"></div><div class="row" style="margin-top:16px"><button class="secondary" onclick="show('topik');clearInterval(timer)">시험 나가기</button><button class="primary" id="next" disabled>${idx===current.length-1?"결과 보기":"다음 문제"}</button></div>`;
+ root.innerHTML=`<div class="row"><div><b>문제 ${idx+1} / ${current.length}</b><div class="progress"><span style="width:${idx/current.length*100}%"></span></div></div><div style="text-align:right"><b>현재 점수: ${score}</b><div id="countdown" class="small"></div></div></div><div class="question">${item.q}</div><div class="options">${item.o.map((x,i)=>`<button class="option" data-i="${i}">${["①","②","③","④"][i]}　${x}</button>`).join("")}</div><div id="feedback"></div><div class="row" style="margin-top:16px"><button class="secondary" onclick="clearInterval(timer);show(mode.startsWith('topik')?'topik':'home')">시험 나가기</button><button class="primary" id="next" disabled>${idx===current.length-1?"결과 보기":"다음 문제"}</button></div>`;
  root.querySelectorAll(".option").forEach(b=>b.onclick=()=>selectOption(+b.dataset.i));
  root.querySelector("#next").onclick=next;
  if(timePerQuestion>0){secondsLeft=timePerQuestion;updateTimer();timer=setInterval(()=>{secondsLeft--;updateTimer();if(secondsLeft<=0){clearInterval(timer);if(!answered)choose(-1)}},1000)}
@@ -610,7 +611,7 @@ function sentenceBreakdownHTML(item){
 function choose(n){
  if(answered)return;answered=true;clearInterval(timer);
  let item=current[idx],ok=n===item.a,detail=getDetailedExplanation(item);if(ok)score++;else wrong.push({q:item.q,chosen:n<0?"시간 초과":item.o[n],answer:item.o[item.a],e:item.e,en:detail.en,breakdown:sentenceBreakdown(item)});
- let root=document.getElementById(mode==="mock"?"mockQuiz":mode+"Quiz");
+ let root=document.getElementById(mode==="topikVocab"||mode==="topikGrammar"||mode==="topikMock"?"topikQuiz":mode==="mock"?"mockQuiz":mode+"Quiz");
  root.querySelectorAll(".option").forEach((b,i)=>{b.disabled=true;if(i===item.a)b.classList.add("correct");else if(i===n)b.classList.add("wrong")});
  let f=root.querySelector("#feedback");f.className="feedback "+(ok?"good":"bad");f.innerHTML=`<b>${n<0?"시간이 초과되었습니다.":ok?"정답입니다.":"아쉽습니다. 정답을 확인하세요."}</b><div style="margin-top:9px"><b>한국어 설명</b><br>${explanationHTML(detail.ko)}</div><div style="margin-top:9px;border-top:1px solid var(--line);padding-top:9px"><b>English explanation</b><br>${explanationHTML(detail.en)}</div>${sentenceBreakdownHTML(item)}`;
  root.querySelector("#next").disabled=false;
