@@ -366,11 +366,47 @@ function render(){
 }
 function updateTimer(){let el=document.getElementById("countdown");if(el)el.textContent=`남은 시간: ${secondsLeft}초`}
 
+function explanationHTML(value){
+ return String(value||"").replace(/\\n/g,"\n").replace(/\r?\n/g,"<br>");
+}
+const CHOICE_MEANINGS={
+ "물어봤어요":"물어보다 (to ask) — past polite form",
+ "버렸어요":"버리다 (to throw away) — past polite form",
+ "세웠어요":"세우다 (to set up / stop a vehicle) — past polite form",
+ "끓였어요":"끓이다 (to boil) — past polite form",
+ "예매한":"예매하다 (to book/reserve) — past modifier form",
+ "끓인":"끓이다 (to boil) — past modifier form",
+ "버린":"버리다 (to throw away) — past modifier form",
+ "입은":"입다 (to wear) — past modifier form",
+ "알아봐요":"알아보다 (to look up / find out)",
+ "울어요":"울다 (to cry)", "젓어요":"젓다 (to stir)", "껴요":"끼다 (to put on/wear, e.g. gloves)",
+ "피곤해요":"피곤하다 (to be tired)", "단순해요":"단순하다 (to be simple)", "친절해요":"친절하다 (to be kind)", "비슷해요":"비슷하다 (to be similar)",
+ "짜서":"짜다 (to be salty) + -아서/어서 (reason)", "밝아서":"밝다 (to be bright) + -아서/어서", "조용해서":"조용하다 (to be quiet) + -아서/어서", "깨끗해서":"깨끗하다 (to be clean) + -아서/어서",
+ "치웠어요":"치우다 (to tidy up) — past polite form", "도착했어요":"도착하다 (to arrive) — past polite form", "추천했어요":"추천하다 (to recommend) — past polite form",
+ "기다렸어요":"기다리다 (to wait) — past polite form", "골랐어요":"고르다 (to choose) — past polite form", "지었어요":"짓다 (to build) — irregular past form",
+ "먹어 봤어요":"먹다 + -아/어 보다 (to try eating)", "입어 봤어요":"입다 + -아/어 보다 (to try on)", "신어 봤어요":"신다 + -아/어 보다 (to try wearing shoes)", "걸어 봤어요":"걷다 + -아/어 보다 (to try walking)",
+ "어울려요":"어울리다 (to suit / go well with)", "출발했어요":"출발하다 (to depart) — past polite form", "계산했어요":"계산하다 (to pay / calculate) — past polite form"
+};
+function choiceMeaning(choice){return CHOICE_MEANINGS[choice]||"";}
+function optionAnalysis(item){
+ return (item.o||[]).map((choice,i)=>{
+   const gloss=choiceMeaning(choice);
+   if(i===item.a) return `✓ ${choice} — correct${gloss?`; ${gloss}`:""}`;
+   return `✗ ${choice}${gloss?` — ${gloss}`:""} — this meaning/action does not fit the sentence context`;
+ }).join("\n");
+}
 function getDetailedExplanation(item){
  const answer=item.o?.[item.a]||"";
  const question=item.q||"";
  const note=item.e||"";
  const completed=question.replace(/_{2,}|___|____/g,`【${answer}】`);
+ if(question==="길을 잘 몰라서 지나가는 사람에게 지하철역을 ________."){
+   const why="‘길을 잘 몰라서’는 길을 모른다는 이유이고, ‘지나가는 사람에게 지하철역을’은 그 사람에게 정보를 질문했다는 뜻입니다. 그래서 ‘물어보다’(to ask)가 문맥에 맞습니다. ‘물어봤어요’는 물어보다의 과거형 + 해요체이며, 이미 질문한 일을 말합니다.";
+   const whyEn="The first clause, 길을 잘 몰라서, gives the reason: the speaker did not know the way. The phrase 지나가는 사람에게 marks the person being asked, and 지하철역을 is the information being asked about. 물어보다 means ‘to ask’; 물어봤어요 is its past-tense polite form, so it says the speaker asked a passer-by where the subway station was.";
+   const choices=optionAnalysis(item);
+   return {ko:`${why}\n\n정답: ${answer}\n완성 문장: ${completed}\n\n선택지 분석:\n${choices}`,en:`Correct answer: “${answer}”.\n\nWhy it fits: ${whyEn}\n\nCompleted sentence: Because I did not know the way, I asked a passer-by where the subway station was.\n\nOption check:\n${choices}\n\nStudy point: Learn 물어보다 as ‘to ask’ and recognise 물어봤어요 as its past polite form. Compare it with 버리다 (throw away), 세우다 (set up/stop), and 끓이다 (boil).`};
+ }
+
 
  // Vocabulary items are identified by their explicit word property; no substring guessing.
  if(item.word){
@@ -548,13 +584,13 @@ function choose(n){
  let item=current[idx],ok=n===item.a,detail=getDetailedExplanation(item);if(ok)score++;else wrong.push({q:item.q,chosen:n<0?"시간 초과":item.o[n],answer:item.o[item.a],e:item.e,en:detail.en,breakdown:sentenceBreakdown(item)});
  let root=document.getElementById(mode==="mock"?"mockQuiz":mode+"Quiz");
  root.querySelectorAll(".option").forEach((b,i)=>{b.disabled=true;if(i===item.a)b.classList.add("correct");else if(i===n)b.classList.add("wrong")});
- let f=root.querySelector("#feedback");f.className="feedback "+(ok?"good":"bad");f.innerHTML=`<b>${n<0?"시간이 초과되었습니다.":ok?"정답입니다.":"아쉽습니다. 정답을 확인하세요."}</b><div style="margin-top:9px"><b>한국어 설명</b><br>${detail.ko}</div><div style="margin-top:9px;border-top:1px solid var(--line);padding-top:9px"><b>English explanation</b><br>${detail.en}</div>${sentenceBreakdownHTML(item)}`;
+ let f=root.querySelector("#feedback");f.className="feedback "+(ok?"good":"bad");f.innerHTML=`<b>${n<0?"시간이 초과되었습니다.":ok?"정답입니다.":"아쉽습니다. 정답을 확인하세요."}</b><div style="margin-top:9px"><b>한국어 설명</b><br>${explanationHTML(detail.ko)}</div><div style="margin-top:9px;border-top:1px solid var(--line);padding-top:9px"><b>English explanation</b><br>${explanationHTML(detail.en)}</div>${sentenceBreakdownHTML(item)}`;
  root.querySelector("#next").disabled=false;
 }
 function next(){idx++;if(idx<current.length)render();else result()}
 function result(){const historyKey=`recentQuestions_${mode}_${selectedDifficulty}`;let prior=[];try{prior=JSON.parse(localStorage.getItem(historyKey)||"[]")}catch(e){};localStorage.setItem(historyKey,JSON.stringify([...current.map(x=>x.q),...prior].slice(0,Math.max(24,current.length*2))));let root=document.getElementById(mode==="topikVocab"||mode==="topikGrammar"||mode==="topikMock"?"topikQuiz":mode==="mock"?"mockQuiz":mode+"Quiz");let pct=Math.round(score/current.length*100);let best=Number(localStorage.bestScore||0);if(pct>best)localStorage.bestScore=pct;localStorage.attempts=Number(localStorage.attempts||0)+1;
  if(mode.startsWith("topik")){localStorage.topikAttempts=Number(localStorage.topikAttempts||0)+1;const tb=Number(localStorage.topikBestScore||0);if(pct>tb)localStorage.topikBestScore=pct;}
- updateStats();root.innerHTML=`<h2>${mode.startsWith("topik")?"TOPIK I ":""}시험 결과</h2><div class="row"><div class="stat"><strong>${score} / ${current.length}</strong><span class="small">맞힌 문제</span></div><div class="stat"><strong>${pct}%</strong><span class="small">점수</span></div></div><p>${pct>=80?"잘했어요! 계속 연습하세요.":pct>=60?"좋아요. 틀린 문제를 다시 확인해 보세요.":"괜찮아요. 어휘와 문법을 다시 복습해 보세요."}</p><h3>다시 확인할 문제 (${wrong.length})</h3>${wrong.length?wrong.map(w=>`<div class="rule"><b>${w.q}</b><br>내 답: ${w.chosen}<br>정답: <b>${w.answer}</b><br><span class="small">${w.e}</span><p><b>English explanation</b><br>${w.en||"Review the explanation shown above and compare the correct answer with the sentence context."}</p><p><b>Sentence breakdown / 문장별 분석</b><br><b>한국어:</b> ${w.breakdown?.sentence||w.q}<br><b>English:</b> ${w.breakdown?.meaning||"Review the sentence meaning in context."}<br><b>Key vocabulary:</b> ${w.breakdown?.vocabLine||"Review the key words."}<br><b>Grammar & context:</b> ${w.breakdown?.grammarHint||w.e}</p></div>`).join(""):"틀린 문제가 없습니다."}<div class="row" style="margin-top:18px"><button class="secondary" onclick="show('home')">처음으로</button><button class="primary" onclick="start('${mode}')">다시 시험 보기</button></div>`}
+ updateStats();root.innerHTML=`<h2>${mode.startsWith("topik")?"TOPIK I ":""}시험 결과</h2><div class="row"><div class="stat"><strong>${score} / ${current.length}</strong><span class="small">맞힌 문제</span></div><div class="stat"><strong>${pct}%</strong><span class="small">점수</span></div></div><p>${pct>=80?"잘했어요! 계속 연습하세요.":pct>=60?"좋아요. 틀린 문제를 다시 확인해 보세요.":"괜찮아요. 어휘와 문법을 다시 복습해 보세요."}</p><h3>다시 확인할 문제 (${wrong.length})</h3>${wrong.length?wrong.map(w=>`<div class="rule"><b>${w.q}</b><br>내 답: ${w.chosen}<br>정답: <b>${w.answer}</b><br><span class="small">${w.e}</span><p><b>English explanation</b><br>${explanationHTML(w.en||"Review the explanation shown above and compare the correct answer with the sentence context.")}</p><p><b>Sentence breakdown / 문장별 분석</b><br><b>한국어:</b> ${w.breakdown?.sentence||w.q}<br><b>English:</b> ${w.breakdown?.meaning||"Review the sentence meaning in context."}<br><b>Key vocabulary:</b> ${w.breakdown?.vocabLine||"Review the key words."}<br><b>Grammar & context:</b> ${w.breakdown?.grammarHint||w.e}</p></div>`).join(""):"틀린 문제가 없습니다."}<div class="row" style="margin-top:18px"><button class="secondary" onclick="show('home')">처음으로</button><button class="primary" onclick="start('${mode}')">다시 시험 보기</button></div>`}
 function updateStats(){document.getElementById("savedAttempts").textContent=localStorage.attempts||0;document.getElementById("bestScore").textContent=localStorage.bestScore?localStorage.bestScore+"%":"—";document.getElementById("vocabCount").textContent=vocab.length;const ta=document.getElementById("topikAttempts");if(ta)ta.textContent=localStorage.topikAttempts||0;const tb=document.getElementById("topikBest");if(tb)tb.textContent=localStorage.topikBestScore?localStorage.topikBestScore+"%":"—"}
 function renderWords(filter=""){let arr=vocab.filter(x=>x[0].includes(filter)||x[1].toLowerCase().includes(filter.toLowerCase()));document.getElementById("wordGrid").innerHTML=arr.map(x=>`<div class="word"><b>${x[0]}</b><span>${x[1]}</span></div>`).join("");document.getElementById("listCount").textContent=arr.length}
 document.getElementById("search").addEventListener("input",e=>renderWords(e.target.value.trim()));renderWords();updateStats();
