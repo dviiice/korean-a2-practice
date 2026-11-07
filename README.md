@@ -61,15 +61,14 @@ remains visible, refresh the page or clear the browser cache.
 ### TOPIK I training page
 
 -   Separate vocabulary, grammar, and mixed mock-exam practice.
--   Beginner TOPIK I grammar practice based on the 84 grammar entries
-    included in the referenced grammar material.
--   A built-in vocabulary starter bank.
+-   Easy mode uses the semester A2 vocabulary and grammar; hard mode
+    uses TOPIK I vocabulary and more advanced grammar questions.
+-   A built-in TOPIK I vocabulary bank with all 1,671 entries from the
+    linked vocabulary reference, searchable on the training page.
 
-**Vocabulary coverage note:** the built-in TOPIK I vocabulary practice
-is a starter set that combines the existing semester word bank with
-additional beginner vocabulary. It is not a complete reproduction of all
-1,671 entries in the linked vocabulary reference PDF. Use the PDF linked
-on the TOPIK page as the full reference list.
+The TOPIK I vocabulary bank reproduces the 1,671 headwords and English
+glosses in the linked vocabulary reference PDF. Use the PDF linked on the
+TOPIK page as the source reference.
 
 ### Confirming an answer
 
