@@ -106,7 +106,7 @@ body[data-theme="dark"] .tab.active{background:var(--blue);color:#fff}
 </script>
 </head>
 <body>
-<header><div class="wrap"><button class="theme-toggle" id="themeToggle" type="button">☾ Dark mode</button><div class="eyebrow">KOREAN LANGUAGE · TOPIK I</div><h1>TOPIK I 종합 연습</h1><p>어휘 · 문법 · 종합 모의고사</p><p class="english">TOPIK I Training · Vocabulary, grammar and mixed mock exams</p></div></header>
+<header><div class="wrap"><button class="theme-toggle" id="themeToggle" type="button">☾ Dark mode</button><label class="theme-toggle" for="displayLanguage" style="margin-right:8px"><span id="languageLabel">Language / Idioma</span> <select id="displayLanguage"><option value="en">English</option><option value="pt">Português (PT-PT)</option></select></label><div class="eyebrow">KOREAN LANGUAGE · TOPIK I</div><h1>TOPIK I 종합 연습</h1><p>어휘 · 문법 · 종합 모의고사</p><p class="english">TOPIK I Training · Vocabulary, grammar and mixed mock exams</p></div></header>
 <div id="settingsModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
   <div class="modal">
     <h2 id="settingsTitle">시험 설정 <span class="en-heading">| Exam settings</span></h2>
@@ -161,6 +161,7 @@ body[data-theme="dark"] .tab.active{background:var(--blue);color:#fff}
 <div class="footer">TOPIK I 종합 연습 · 개인 학습용 <span class="en-heading">| TOPIK I training · For individual study</span></div>
 </main>
 <script src="practice_questions.js"></script>
+<script src="pt_pt.js"></script>
 <script>
 const vocab = [
 ["교사","teacher"],["프로그램","program"],["굽다","bake"],["가르치다","teach"],["헤어 디자이너","hair designer"],["프로그래머","programmer"],["제빵사","baker"],["가구","furniture"],["잃어버리다","lose"],["반갑다","glad"],["베트남어","Vietnamese"],["휴게실","lounge"],["즐겁다","joyful"],
@@ -366,7 +367,7 @@ function makeVocab(){return vocab.map(([word,meaning])=>{let distract=shuffle(vo
 function render(){
  clearInterval(timer);answered=false;selectedAnswer=null;
  let root=document.getElementById(mode==="topikVocab"||mode==="topikGrammar"||mode==="topikMock"?"topikQuiz":mode==="mock"?"mockQuiz":mode+"Quiz"),item=current[idx];
- root.innerHTML=`<div class="row"><div><b>문제 ${idx+1} / ${current.length}</b><div class="progress"><span style="width:${idx/current.length*100}%"></span></div></div><div style="text-align:right"><b>현재 점수: ${score}</b><div id="countdown" class="small"></div></div></div><div class="question">${item.q}</div><div class="options">${item.o.map((x,i)=>`<button class="option" data-i="${i}">${["①","②","③","④"][i]}　${x}</button>`).join("")}</div><div id="feedback"></div><div class="row" style="margin-top:16px"><button class="secondary" onclick="clearInterval(timer);show(mode.startsWith('topik')?'topik':'home')">시험 나가기</button><button class="primary" id="next" disabled>${idx===current.length-1?"결과 보기":"다음 문제"}</button></div>`;
+ root.innerHTML=`<div class="row"><div><b>${practiceLang()==="pt"?"Pergunta":"문제"} ${idx+1} / ${current.length}</b><div class="progress"><span style="width:${idx/current.length*100}%"></span></div></div><div style="text-align:right"><b>${practiceLang()==="pt"?"Pontuação":"현재 점수"}: ${score}</b><div id="countdown" class="small"></div></div></div><div class="question">${practiceQuestion(item.q)}</div><div class="options">${item.o.map((x,i)=>`<button class="option" data-i="${i}">${["①","②","③","④"][i]}　${practiceOption(x)}</button>`).join("")}</div><div id="feedback"></div><div class="row" style="margin-top:16px"><button class="secondary" onclick="clearInterval(timer);show(mode.startsWith('topik')?'topik':'home')">${practiceLang()==="pt"?"Sair do teste":"시험 나가기"}</button><button class="primary" id="next" disabled>${idx===current.length-1?(practiceLang()==="pt"?"Ver resultado":"결과 보기"):(practiceLang()==="pt"?"Próxima pergunta":"다음 문제")}</button></div>`;
  root.querySelectorAll(".option").forEach(b=>b.onclick=()=>selectOption(+b.dataset.i));
  root.querySelector("#next").onclick=next;
  if(timePerQuestion>0){secondsLeft=timePerQuestion;updateTimer();timer=setInterval(()=>{secondsLeft--;updateTimer();if(secondsLeft<=0){clearInterval(timer);if(!answered)choose(-1)}},1000)}
@@ -378,7 +379,7 @@ function selectOption(n){
  root.querySelectorAll(".option").forEach((b,i)=>b.classList.toggle("selected",i===n));
  const feedback=root.querySelector("#feedback");
  feedback.className="feedback";
- feedback.innerHTML=`<div style="margin-bottom:10px">선택한 답: <b>${current[idx].o[n]}</b> — 확인 버튼을 누르기 전에는 답으로 제출되지 않습니다.<br><span class="small">Your choice is not submitted until you confirm it.</span></div><button type="button" class="primary" id="confirmAnswer">선택 확인 / Confirm answer</button>`;
+ feedback.innerHTML=`<div style="margin-bottom:10px">${practiceLang()==="pt"?"Resposta selecionada":"선택한 답"}: <b>${practiceOption(current[idx].o[n])}</b> — ${practiceLang()==="pt"?"A resposta só é submetida quando a confirma.":"확인 버튼을 누르기 전에는 답으로 제출되지 않습니다."}<br><span class="small">${practiceLang()==="pt"?"A resposta ainda não foi submetida.":"Your choice is not submitted until you confirm it."}</span></div><button type="button" class="primary" id="confirmAnswer">${practiceLang()==="pt"?"Confirmar resposta":"선택 확인 / Confirm answer"}</button>`;
  root.querySelector("#confirmAnswer").onclick=()=>choose(selectedAnswer);
 }
 function updateTimer(){let el=document.getElementById("countdown");if(el)el.textContent=`남은 시간: ${secondsLeft}초`}
@@ -627,8 +628,8 @@ function result(){const historyKey=`recentQuestions_${mode}_${selectedDifficulty
  if(mode.startsWith("topik")){localStorage.topikAttempts=Number(localStorage.topikAttempts||0)+1;const tb=Number(localStorage.topikBestScore||0);if(pct>tb)localStorage.topikBestScore=pct;}
  updateStats();root.innerHTML=`<h2>${mode.startsWith("topik")?"TOPIK I ":""}시험 결과</h2><div class="row"><div class="stat"><strong>${score} / ${current.length}</strong><span class="small">맞힌 문제</span></div><div class="stat"><strong>${pct}%</strong><span class="small">점수</span></div></div><p>${pct>=80?"잘했어요! 계속 연습하세요.":pct>=60?"좋아요. 틀린 문제를 다시 확인해 보세요.":"괜찮아요. 어휘와 문법을 다시 복습해 보세요."}</p><h3>다시 확인할 문제 (${wrong.length})</h3>${wrong.length?wrong.map(w=>`<div class="rule"><b>${w.q}</b><br>내 답: ${w.chosen}<br>정답: <b>${w.answer}</b><br><span class="small">${w.e}</span><p><b>English explanation</b><br>${explanationHTML(w.en||"Review the explanation shown above and compare the correct answer with the sentence context.")}</p><p><b>Sentence breakdown / 문장별 분석</b><br><b>한국어:</b> ${w.breakdown?.sentence||w.q}<br><b>English:</b> ${w.breakdown?.meaning||"Review the sentence meaning in context."}<br><b>Key vocabulary:</b> ${w.breakdown?.vocabLine||"Review the key words."}<br><b>Grammar & context:</b> ${w.breakdown?.grammarHint||w.e}</p></div>`).join(""):"틀린 문제가 없습니다."}<div class="row" style="margin-top:18px"><button class="secondary" onclick="show('topik')">처음으로</button><button class="primary" onclick="start('${mode}')">다시 시험 보기</button></div>`}
 function updateStats(){document.getElementById("savedAttempts").textContent=localStorage.attempts||0;document.getElementById("bestScore").textContent=localStorage.bestScore?localStorage.bestScore+"%":"—";document.getElementById("vocabCount").textContent=vocab.length;const ta=document.getElementById("topikAttempts");if(ta)ta.textContent=localStorage.topikAttempts||0;const tb=document.getElementById("topikBest");if(tb)tb.textContent=localStorage.topikBestScore?localStorage.topikBestScore+"%":"—"}
-function renderWords(filter=""){let arr=vocab.filter(x=>x[0].includes(filter)||x[1].toLowerCase().includes(filter.toLowerCase()));document.getElementById("wordGrid").innerHTML=arr.map(x=>`<div class="word"><b>${x[0]}</b><span>${x[1]}</span></div>`).join("");document.getElementById("listCount").textContent=arr.length}
-function renderTopikWords(filter=""){const q=filter.toLowerCase();const arr=topikAllVocab.filter(([ko,en])=>ko.toLowerCase().includes(q)||en.toLowerCase().includes(q));document.getElementById("topikWordGrid").innerHTML=arr.map(([ko,en])=>`<div class="word"><b>${ko}</b><span>${en}</span></div>`).join("");document.getElementById("topikListCount").textContent=arr.length.toLocaleString()}
+function renderWords(filter=""){let arr=vocab.filter(x=>x[0].includes(filter)||x[1].toLowerCase().includes(filter.toLowerCase())||window.ptGloss(x[1]).toLowerCase().includes(filter.toLowerCase()));document.getElementById("wordGrid").innerHTML=arr.map(x=>`<div class="word"><b>${x[0]}</b><span>${practiceLang()==="pt"?window.ptGloss(x[1]):x[1]}</span></div>`).join("");document.getElementById("listCount").textContent=arr.length}
+function renderTopikWords(filter=""){const q=filter.toLowerCase();const arr=topikAllVocab.filter(([ko,en])=>ko.toLowerCase().includes(q)||en.toLowerCase().includes(q)||window.ptGloss(en).toLowerCase().includes(q));document.getElementById("topikWordGrid").innerHTML=arr.map(([ko,en])=>`<div class="word"><b>${ko}</b><span>${practiceLang()==="pt"?window.ptGloss(en):en}</span></div>`).join("");document.getElementById("topikListCount").textContent=arr.length.toLocaleString()}
 document.getElementById("topikSearch").addEventListener("input",e=>renderTopikWords(e.target.value.trim()));renderTopikWords();
 document.getElementById("search").addEventListener("input",e=>renderWords(e.target.value.trim()));renderWords();updateStats();
 </script>
@@ -664,6 +665,18 @@ document.addEventListener("DOMContentLoaded", function () {
   if (home) home.classList.add("hidden");
   if (topik) topik.classList.remove("hidden");
 });
+</script>
+<script>
+const displayLanguage=document.getElementById("displayLanguage");
+try{displayLanguage.value=localStorage.practiceLanguage||"en"}catch(e){}
+displayLanguage.addEventListener("change",()=>{
+  try{localStorage.practiceLanguage=displayLanguage.value}catch(e){}
+  applyPracticeLanguage();
+  renderWords(document.getElementById("search").value.trim());
+  renderTopikWords(document.getElementById("topikSearch").value.trim());
+  if(current.length)render();
+});
+applyPracticeLanguage();
 </script>
 
 </body></html>

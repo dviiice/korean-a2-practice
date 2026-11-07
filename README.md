@@ -12,7 +12,8 @@ A browser-based Korean study site with a study guide and two separate practice p
     vocabulary, grammar, and mixed practice.
 
 The site uses HTML, CSS, and JavaScript, with shared local scripts for
-the A2 vocabulary and harder question banks. It requires no package
+the A2 vocabulary, harder question banks, and European Portuguese
+translations. It requires no package
 manager, server-side code, or build step. The resource panel searches a
 curated list of Korean dictionaries, courses, vocabulary references, and
 TOPIK information. It does not generate answers to questions.
@@ -28,8 +29,9 @@ For the GitHub Pages repository root, use these filenames:
   `topik_i_training.html`   TOPIK I vocabulary and grammar tests
   `a2_content.js`            Shared A2 semester vocabulary list
   `practice_questions.js`    Shared harder contextual questions
+  `pt_pt.js`                 Shared PT-PT vocabulary and interface translations
 
-Keep all five files in the repository root. The A2 guide links to the
+Keep all six files in the repository root. The A2 guide links to the
 A2 tests, and both test pages link to each other.
 
 ## Publish with GitHub Pages
@@ -37,8 +39,8 @@ A2 tests, and both test pages link to each other.
 1.  Open your GitHub repository.
 2.  Upload `index.html`.
 3.  Upload `a2_test.html`, `topik_i_training.html`,
-    `a2_content.js`, and `practice_questions.js`.
-4.  Make sure all five files are in the repository root (not inside
+    `a2_content.js`, `practice_questions.js`, and `pt_pt.js`.
+4.  Make sure all six files are in the repository root (not inside
     different folders).
 5.  Commit and push the changes to the branch configured for GitHub Pages,
     usually `main`.
@@ -66,6 +68,9 @@ remains visible, refresh the page or clear the browser cache.
     Korean Language learner dictionary, King Sejong beginner courses and
     apps, TOPIK references, and official TOPIK information. It can filter
     resources by topic and shows the full list when no match is found.
+-   Random vocabulary or grammar multiple-choice pop-ups every 20–40 seconds while studying.
+    Correct answers show “잘 했어요 :)”. Learners can dismiss a question or
+    stop pop-ups for the current page; the choice resets on navigation/reload.
 
 ### A2 practice tests
 
@@ -74,6 +79,7 @@ remains visible, refresh the page or clear the browser cache.
     grammar, with longer contexts and reading comprehension.
 -   Configurable question timer, light/dark themes, English answer
     explanations, and review of incorrect answers.
+-   English or Portuguese (Portugal) interface and vocabulary meanings.
 
 ### TOPIK I training page
 
@@ -82,6 +88,9 @@ remains visible, refresh the page or clear the browser cache.
     uses TOPIK I vocabulary and more advanced grammar questions.
 -   A built-in TOPIK I vocabulary bank with all 1,671 entries from the
     linked vocabulary reference, searchable on the training page.
+-   English or Portuguese (Portugal) interface and translated vocabulary
+    meanings where a PT-PT gloss is available. Unmapped TOPIK glosses retain
+    their English source text.
 
 The TOPIK I vocabulary bank reproduces the 1,671 headwords and English
 glosses in the linked vocabulary reference PDF. Use the PDF linked on the
@@ -141,5 +150,6 @@ repository/
 ├── topik_i_training.html
 ├── a2_content.js
 ├── practice_questions.js
+├── pt_pt.js
 └── README.md
 ```
