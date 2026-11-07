@@ -1,14 +1,21 @@
 # Korean A2 Exam Practice & TOPIK I Training
 
-A browser-based Korean study website with two separate practice pages:
+A browser-based Korean study site with a study guide and two separate practice pages:
 
--   **A2 semester exam practice** --- the main page for semester
-    vocabulary, grammar, and mixed mock-exam practice.
+-   **A2 study guide** --- the homepage with Vocabulary and Grammar tabs,
+    semester vocabulary with English or European Portuguese meanings,
+    grammar explanations and examples in both languages, and a searchable
+    study resources panel.
+-   **A2 practice tests** --- vocabulary, grammar, and mixed mock exams
+    with easy A2 and harder TOPIK I Level 2-style question pools.
 -   **TOPIK I training** --- a separate beginner TOPIK I page for
     vocabulary, grammar, and mixed practice.
 
-The site is made with standalone HTML, CSS, and JavaScript. It does not
-require a package manager, server-side code, or a build step.
+The site uses HTML, CSS, and JavaScript, with shared local scripts for
+the A2 vocabulary and harder question banks. It requires no package
+manager, server-side code, or build step. The resource panel searches a
+curated list of Korean dictionaries, courses, vocabulary references, and
+TOPIK information. It does not generate answers to questions.
 
 ## Files
 
@@ -16,31 +23,30 @@ For the GitHub Pages repository root, use these filenames:
 
   File                      Purpose
   ------------------------- -------------------------------------------
-  `index.html`              Korean A2 semester exam practice homepage
-  `topik_i_training.html`   Standalone TOPIK I training page
+  `index.html`              A2 study guide and site homepage
+  `a2_test.html`            A2 semester vocabulary and grammar tests
+  `topik_i_training.html`   TOPIK I vocabulary and grammar tests
+  `a2_content.js`            Shared A2 semester vocabulary list
+  `practice_questions.js`    Shared harder contextual questions
 
-Use the latest supplied TOPIK file,
-`topik_i_training_standalone_start.html`, and rename it to
-`topik_i_training.html` when adding it to the repository.
-
-Keep both HTML files in the **same repository folder**. The A2 page
-links to the TOPIK I page, and the TOPIK I page includes a link back to
-A2 practice.
+Keep all five files in the repository root. The A2 guide links to the
+A2 tests, and both test pages link to each other.
 
 ## Publish with GitHub Pages
 
 1.  Open your GitHub repository.
 2.  Upload `index.html`.
-3.  Upload `topik_i_training_standalone_start.html`, renamed to
-    `topik_i_training.html`.
-4.  Make sure both files are in the repository root (not inside
+3.  Upload `a2_test.html`, `topik_i_training.html`,
+    `a2_content.js`, and `practice_questions.js`.
+4.  Make sure all five files are in the repository root (not inside
     different folders).
-5.  Commit the changes to the branch configured for GitHub Pages,
+5.  Commit and push the changes to the branch configured for GitHub Pages,
     usually `main`.
 6.  In the repository, open **Settings → Pages** and confirm that GitHub
     Pages is configured to deploy from the correct branch and folder.
-7.  Open the published site. The A2 page should load at the site root.
-    Use its TOPIK I link to open the separate TOPIK page.
+7.  Open the published site. Because `index.html` remains in the
+    repository root, it continues to load as the homepage. The guide’s
+    relative links open the A2 or TOPIK I practice pages.
 
 After replacing either HTML file, commit the new version. It may take a
 short time for GitHub Pages to publish the changes. If an older version
@@ -48,15 +54,26 @@ remains visible, refresh the page or clear the browser cache.
 
 ## Practice features
 
-### A2 semester exam page
+### A2 study guide
+
+-   Vocabulary and Grammar are separate tabs; only the selected section
+    is shown.
+-   Searchable semester vocabulary with English or European Portuguese
+    meanings. The language selector changes the vocabulary meanings as
+    well as the grammar explanations and example translations.
+-   Grammar notes with four or five translated examples for each point.
+-   A searchable resource panel with links to the National Institute of
+    Korean Language learner dictionary, King Sejong beginner courses and
+    apps, TOPIK references, and official TOPIK information. It can filter
+    resources by topic and shows the full list when no match is found.
+
+### A2 practice tests
 
 -   Vocabulary, grammar, and mixed mock-exam practice.
--   Easy A2 and advanced practice options where provided by the page.
--   Configurable question timer options.
--   Light and dark display themes.
--   Korean questions and instructions, with English support in
-    explanations.
--   Answer feedback and review of incorrect answers.
+-   Easy A2 questions and harder questions using TOPIK I vocabulary and
+    grammar, with longer contexts and reading comprehension.
+-   Configurable question timer, light/dark themes, English answer
+    explanations, and review of incorrect answers.
 
 ### TOPIK I training page
 
@@ -120,6 +137,9 @@ means:
 ``` text
 repository/
 ├── index.html
+├── a2_test.html
 ├── topik_i_training.html
+├── a2_content.js
+├── practice_questions.js
 └── README.md
 ```

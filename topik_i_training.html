@@ -124,7 +124,7 @@ body[data-theme="dark"] .tab.active{background:var(--blue);color:#fff}
   </div>
 </div>
 <main class="wrap">
-<nav><a class="tab" href="index.html">← A2 연습으로 돌아가기 <span class="en-heading">/ Back to A2 practice</span></a><span class="tab active">TOPIK I 연습 <span class="en-heading">/ TOPIK I Training</span></span></nav>
+<nav><a class="tab" href="a2_test.html">← A2 시험으로 돌아가기 <span class="en-heading">/ Back to A2 tests</span></a><a class="tab" href="index.html">A2 학습 자료 <span class="en-heading">/ A2 study guide</span></a><span class="tab active">TOPIK I 연습 <span class="en-heading">/ TOPIK I Training</span></span></nav>
 <section id="home" class="view hidden">
 <div class="panel"><h2>시험 준비 <span class="en-heading">| Exam preparation</span></h2><p>이번 학기에 배운 어휘와 문법을 복습하세요. 문제와 안내는 한국어로 제공됩니다.</p><p class="english">Review the vocabulary and grammar you studied this semester. All questions and test instructions are in Korean.</p>
 <div class="row"><div class="stat"><strong id="savedAttempts">0</strong><span class="small">완료한 연습</span><div class="english">Completed attempts</div></div><div class="stat"><strong id="bestScore">—</strong><span class="small">최고 점수</span><div class="english">Best score</div></div><div class="stat"><strong id="vocabCount">0</strong><span class="small">어휘 항목</span><div class="english">Vocabulary items</div></div></div></div>
@@ -160,6 +160,7 @@ body[data-theme="dark"] .tab.active{background:var(--blue);color:#fff}
 <section id="list" class="view hidden"><div class="panel"><h2>이번 학기 어휘 목록 <span class="en-heading">| Semester vocabulary list</span></h2><p class="muted">이번 학기에 배운 단어를 검색하세요. <span class="en-heading">— Search the words studied this semester.</span></p><p class="muted">총 <span id="listCount">0</span>개 항목 · 검색할 수 있습니다.</p><input id="search" type="text" placeholder="단어 검색... / Search words" aria-label="단어 검색 / Search words"><div class="wordgrid" id="wordGrid" style="margin-top:14px"></div></div></section>
 <div class="footer">TOPIK I 종합 연습 · 개인 학습용 <span class="en-heading">| TOPIK I training · For individual study</span></div>
 </main>
+<script src="practice_questions.js"></script>
 <script>
 const vocab = [
 ["교사","teacher"],["프로그램","program"],["굽다","bake"],["가르치다","teach"],["헤어 디자이너","hair designer"],["프로그래머","programmer"],["제빵사","baker"],["가구","furniture"],["잃어버리다","lose"],["반갑다","glad"],["베트남어","Vietnamese"],["휴게실","lounge"],["즐겁다","joyful"],
@@ -288,6 +289,7 @@ const extraGrammar=[
 
 let current=[],idx=0,score=0,answered=false,selectedAnswer=null,mode="vocab",wrong=[],timer=null,secondsLeft=0,selectedDifficulty="easy",timePerQuestion=30;
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function shuffleOptions(item){const options=shuffle(item.o.map((text,i)=>({text,correct:i===item.a})));return {...item,o:options.map(x=>x.text),a:options.findIndex(x=>x.correct)}}
 function show(view){document.querySelectorAll(".view").forEach(x=>x.classList.add("hidden"));document.getElementById(view).classList.remove("hidden");document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.view===view))}
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
 let pendingMode="vocab";
@@ -341,10 +343,13 @@ function beginExam(which){
  selectedDifficulty=document.getElementById("difficulty").value;
  timePerQuestion=Number(document.getElementById("timeLimit").value);
  const vocabPool=makeVocab();
- const topikVocab=topikVocabPool(selectedDifficulty==="hard"), topikGrammar=selectedDifficulty==="easy"?[...grammar.slice(0,17),...extraGrammar.slice(0,8)]:[...topikGrammarPool(),...advancedGrammar,...extraGrammar];
- const grammarPool=selectedDifficulty==="easy"?[...grammar.slice(0,17),...extraGrammar.slice(0,8)]:[...grammar,...advancedGrammar,...extraGrammar,...topikGrammar];
- const hardWords=hardVocabItems.map(x=>{const pairs=x.o.map((v,i)=>({v,correct:i===x.a}));const shuffled=shuffle(pairs);return {...x,o:shuffled.map(p=>p.v),a:shuffled.findIndex(p=>p.correct)}});
- let pool=which==="topikVocab"?(selectedDifficulty==="easy"?vocabPool:topikVocab):which==="topikGrammar"?(selectedDifficulty==="easy"?grammarPool:topikGrammar):which==="topikMock"?(selectedDifficulty==="easy"?shuffle([...shuffle(vocabPool).slice(0,10),...shuffle(grammarPool).slice(0,10)]):shuffle([...shuffle(topikVocab).slice(0,10),...shuffle(topikGrammar).slice(0,10)])):which==="vocab"?(selectedDifficulty==="easy"?vocabPool:topikVocab):which==="grammar"?grammarPool:shuffle(selectedDifficulty==="easy"?[...shuffle(vocabPool).slice(0,6),...shuffle(grammarPool).slice(0,6)]:[...shuffle(topikVocab).slice(0,10),...shuffle(grammarPool).slice(0,10)]);
+ const topikVocab=selectedDifficulty==="easy"?vocabPool:[...hardVocabItems,...window.HARD_VOCAB_QUESTIONS,...shuffle(topikVocabPool(true)).slice(0,8)];
+ const topikGrammar=selectedDifficulty==="easy"?[...grammar.slice(0,17),...extraGrammar.slice(0,8)]:[...advancedGrammar,...extraGrammar,...window.HARD_GRAMMAR_QUESTIONS];
+ const grammarPool=selectedDifficulty==="easy"?[...grammar.slice(0,17),...extraGrammar.slice(0,8)]:[...grammar,...advancedGrammar,...extraGrammar,...window.HARD_GRAMMAR_QUESTIONS];
+ const hardWords=[...hardVocabItems,...window.HARD_VOCAB_QUESTIONS,...shuffle(topikVocabPool(true)).slice(0,8)].map(x=>{const pairs=x.o.map((v,i)=>({v,correct:i===x.a}));const shuffled=shuffle(pairs);return {...x,o:shuffled.map(p=>p.v),a:shuffled.findIndex(p=>p.correct)}});
+ const hardReading=window.HARD_READING_QUESTIONS;
+ let pool=which==="topikVocab"?(selectedDifficulty==="easy"?vocabPool:topikVocab):which==="topikGrammar"?(selectedDifficulty==="easy"?grammarPool:topikGrammar):which==="topikMock"?(selectedDifficulty==="easy"?shuffle([...shuffle(vocabPool).slice(0,10),...shuffle(grammarPool).slice(0,10)]):shuffle([...shuffle(topikVocab).slice(0,8),...shuffle(topikGrammar).slice(0,8),...shuffle(hardReading).slice(0,4)])):which==="vocab"?(selectedDifficulty==="easy"?vocabPool:hardWords):which==="grammar"?grammarPool:shuffle(selectedDifficulty==="easy"?[...shuffle(vocabPool).slice(0,6),...shuffle(grammarPool).slice(0,6)]:[...shuffle(topikVocab).slice(0,8),...shuffle(topikGrammar).slice(0,8),...shuffle(hardReading).slice(0,4)]);
+ pool=pool.map(shuffleOptions);
  const count=which==="topikMock"?20:which.startsWith("topik")?12:which==="mock"?(selectedDifficulty==="easy"?12:20):(selectedDifficulty==="easy"?8:12);
  const historyKey=`recentQuestions_${which}_${selectedDifficulty}`;
  let history=[];try{history=JSON.parse(localStorage.getItem(historyKey)||"[]")}catch(e){history=[]}
@@ -579,7 +584,7 @@ function getDetailedExplanation(item){
  ];
  const specific=targeted.find(([rx])=>rx.test(question))?.[1];
  const korean=note || `정답은 ‘${answer}’입니다. 완성된 문장에서 이 표현이 어떤 역할을 하는지 확인하세요.`;
- const english=specific?.[1] || `The correct answer is “${answer}”. In the completed sentence, this form fits the time, meaning, and relationship between the clauses. Compare it with the other options and identify which part of the sentence each one would express.`;
+ const english=item.en || specific?.[1] || `The correct answer is “${answer}”. In the completed sentence, this form fits the time, meaning, and relationship between the clauses. Compare it with the other options and identify which part of the sentence each one would express.`;
  return {ko:`${korean}\n\n완성 문장: ${completed}`,en:`${english}\n\nCompleted sentence: ${completed}`};
 }
 
@@ -592,9 +597,9 @@ function sentenceBreakdown(item){
  }
  return {
    sentence:completed,
-   meaning:"See the English explanation above for the specific grammar point. A complete sentence translation is not supplied when it cannot be verified.",
+   meaning:item.en||"See the English explanation above for the specific grammar point. A complete sentence translation is not supplied when it cannot be verified.",
    vocabLine:"Only vocabulary explicitly identified in the question is listed; no substring-based word guesses are made.",
-   grammarHint:item.e||"See the question-specific explanation above.",
+   grammarHint:item.en||item.e||"See the question-specific explanation above.",
    choices:item.o.map((v,i)=>`${i===item.a?"✓":"✗"} ${v}`).join(" · ")
  };
 }
