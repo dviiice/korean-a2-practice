@@ -71,6 +71,8 @@ remains visible, refresh the page or clear the browser cache.
 -   Random vocabulary or grammar multiple-choice pop-ups every 20–40 seconds while studying.
     Correct answers show “잘 했어요 :)”. Learners can dismiss a question or
     stop pop-ups for the current page; the choice resets on navigation/reload.
+    Questions are randomized without repeats until that tab’s pool has cycled.
+-   The study guide has the same light/dark theme control as the practice pages.
 
 ### A2 practice tests
 
@@ -80,6 +82,9 @@ remains visible, refresh the page or clear the browser cache.
 -   Configurable question timer, light/dark themes, English answer
     explanations, and review of incorrect answers.
 -   English or Portuguese (Portugal) interface and vocabulary meanings.
+-   A consistent EN/PT slider on the study guide, A2 tests, and TOPIK I page.
+    Test prompts remain in Korean; answer explanations retain their source
+    language where a Portuguese translation is not available.
 
 ### TOPIK I training page
 
